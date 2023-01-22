@@ -1,6 +1,5 @@
 //in ToDoForm.tsx
 import * as React from "react";
-import shortid from "shortid";
 import { TodoInterface, TodoFormInterface } from "../interface";
 const ToDoForm = (props: TodoFormInterface) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -15,7 +14,7 @@ const ToDoForm = (props: TodoFormInterface) => {
     if (event.key === "Enter") {
       // Prepare new todo object
       const newTodo: TodoInterface = {
-        id: shortid.generate(),
+        id: 0,
         name: values,
         isCompleted: false,
       };
