@@ -4,7 +4,7 @@ import ToDoForm from "./components/ToDoForm";
 import ToDoList from "./components/ToDoList1";
 import { TodoInterface } from "./interface";
 import "./style.css";
-import { BASE_URL } from './constants';
+import { BASE_URL, POST_TODOS, PUT_TODOS, DEL_TODOS } from './contants';
 import axios from 'axios';
 
 const App: React.FC = () => {
@@ -15,9 +15,14 @@ const App: React.FC = () => {
 
   // Creating new todo item
   function handleTodoCreate(todo: TodoInterface) {
-    const newTodosState: TodoInterface[] = Array.from(todos);
-    newTodosState.push(todo);
-    setTodos(newTodosState);
+    // POST /todos
+    axios.post(POST_TODOS, todo)
+      .then(response => {
+        setTodos([...todos, response.data]);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
   
   // Update existing todo item
@@ -25,21 +30,24 @@ const App: React.FC = () => {
     event: React.ChangeEvent<HTMLInputElement>,
     id: number
   ) {
-    const newTodosState: TodoInterface[] = Array.from(todos);
-
-    newTodosState.find((todo: TodoInterface) => todo.id === id)!.name =
-      event.target.value;
-
-    setTodos(newTodosState);
+      axios.put(`${PUT_TODOS}${id}`, { name: event.target.value })
+        .then(response => {
+          setTodos(prevTodos => prevTodos.map(todo => todo.id === id ? response.data : todo));
+        })
+        .catch(error => {
+          console.log(error);
+        });
   }
 
   // Remove existing todo item
   function handleTodoRemove(id: number) {
-    const newTodosState: TodoInterface[] = todos.filter(
-      (todo: TodoInterface) => todo.id !== id
-    );
-
-    setTodos(newTodosState);
+    axios.delete(`${DEL_TODOS}${id}`)
+      .then(() => {
+        setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   // Check existing todo item as completed
