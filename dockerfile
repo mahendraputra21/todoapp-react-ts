@@ -16,7 +16,7 @@ RUN yarn build
 # Expose app port
 EXPOSE 3000
 
-ENV HOST=todoapp-ldr6wtdkbq-uc.a.run.app
+# ENV HOST=todoapp-ldr6wtdkbq-uc.a.run.app
 
 # Start app
 CMD ["yarn", "start"]
