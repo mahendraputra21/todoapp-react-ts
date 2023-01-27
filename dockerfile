@@ -14,7 +14,7 @@ COPY . .
 RUN yarn build
 
 # Expose app port
-EXPOSE 3000
+EXPOSE 80
 
 # ENV HOST=todoapp-ldr6wtdkbq-uc.a.run.app
 
