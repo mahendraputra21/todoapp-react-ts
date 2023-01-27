@@ -1,22 +1,21 @@
-FROM node:19.4.0
+FROM node:19.4.0-alpine as build-stage
 
-# Create app directory
 WORKDIR /app
 
-# Install app dependencies
-COPY package.json yarn.lock ./
-RUN yarn install
+COPY package*.json ./
 
-# Copy app source code
+RUN apk add --no-cache yarn
+
+RUN yarn
+
 COPY . .
 
-# Build app
 RUN yarn build
 
-# Expose app port
+FROM nginx:1.19-alpine
+
+COPY --from=build-stage /app/build /usr/share/nginx/html
+
 EXPOSE 80
 
-# ENV HOST=todoapp-ldr6wtdkbq-uc.a.run.app
-
-# Start app
-CMD ["yarn", "start"]
+CMD ["nginx", "-g", "daemon off;"]
